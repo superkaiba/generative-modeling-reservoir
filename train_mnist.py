@@ -7,8 +7,9 @@ import argparse
 import os
 
 class Net(nn.Module):
-    def __init__(self, num_layers, width, c):
+    def __init__(self, num_layers, width, input_size, c):
         super(Net, self).__init__()
+        self.input_layer = nn.Linear(input_size, width, bias=True)
         self.layers = nn.ModuleList()
         for _ in range(num_layers):
             layer = nn.Linear(width, width, bias=True)
@@ -16,6 +17,8 @@ class Net(nn.Module):
             layer.weight.requires_grad = False
             self.layers.append(layer)
         self.output_layer = nn.Linear(width, 10, bias=True)
+        self.output_layer.weight.requires_grad = False
+        self.input_layer.weight.requires_grad = False
 
     def forward(self, x):
         for layer in self.layers:
